@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -88,13 +88,12 @@
       for (var i = 0; i < currentRow.length; i += 1) {
         if (currentRow[i] === 1) {
           pieceCount += 1;
-          console.log("I found a piece!");
         }
       }
 
       if (pieceCount > 1) {
         return true;
-      } else{
+      } else {
         return false;
       }
     },
@@ -106,11 +105,11 @@
       //for every row on the board, check if hasRowConflictAt returns true
       //if hasRowConflictAt returns true, return true
       for (var i = 0; i < rowNum; i += 1) {
-        if (this.hasRowConflictAt(i)){
+        if (this.hasRowConflictAt(i)) {
           return true;
         }
       }  
-    //else return false
+      //else return false
       return false; // fixme
     },
 
@@ -121,11 +120,37 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var boardSize = this.get(0).length;
+      var pieceCount = 0;
+
+      //for each row, look at the value at row[colIndex]
+      //if that value is 1, increment pieceCount
+      for (var row = 0; row < boardSize; row += 1) {
+        var currentValue = this.get(row)[colIndex];
+        if (currentValue === 1) {
+          pieceCount += 1;
+        }
+      }
+      //if pieceCount is greater than 1, return true
+      //else, return false
+      if (pieceCount > 1) {
+        return true;
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      //Find num of Cols and save as boardSize
+      var boardSize = this.get(0).length;
+      //for each col, run hasColConflictAt on it 
+      for (var col = 0; col < boardSize; col += 1) {
+        if (this.hasColConflictAt(col)) {
+          return true;
+        }
+      }
+      //if hasColConflictAt is true, return true
+      //else return false
       return false; // fixme
     },
 
