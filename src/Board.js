@@ -161,11 +161,59 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var boardSize = this.get(0).length;
+      var maxDiagonalLength = boardSize - majorDiagonalColumnIndexAtFirstRow;
+      var pieceCount = 0; 
+      //if majorDiagonalColIndex is zero, you will look down the whole first col. 
+      //Otherwise, you are only looking at a single diagonal for conflicts
+      if (majorDiagonalColumnIndexAtFirstRow > 0) {
+        var diagonalLength = maxDiagonalLength;
+        for (var row = 0; row < diagonalLength; row += 1) {
+          if (this.get(row)[majorDiagonalColumnIndexAtFirstRow + row] === 1) {
+            pieceCount +=1;
+          }
+        }
+      }
+
+      if (pieceCount > 1) {
+        return true
+      }
+      //if majorDiagonalColIndex is 0
+      //for every element in the first col
+      //look at diagonal that starts at that element and go down along the diagonal
+      //for each row, count up the number of 1's and increment pieceCount
+      //if pieceCount is greater than 1 for any of the diagonals, return true
+      if (majorDiagonalColumnIndexAtFirstRow === 0) {
+        for (var startingRow = 0; startingRow < boardSize; startingRow += 1) {
+          var diagonalLength = boardSize - startingRow;
+          var innerPieceCount = 0; 
+          for (var row = startingRow; row < boardSize; row += 1) {
+            if (this.get(row)[majorDiagonalColumnIndexAtFirstRow + (row - startingRow)] === 1) {
+              pieceCount += 1; 
+            }
+          }
+          if (pieceCount > 1) {
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var boardSize = this.get(0).length;
+
+      //look at every element of first row
+      //if hasMajorDiagonalConflictAt of any index of the first row returns true, then return true
+      //else return false
+
+      //
+      for (var firstRowIndex = 0; firstRowIndex < boardSize; firstRowIndex += 1) {
+        if (this.hasMajorDiagonalConflictAt(firstRowIndex)) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
