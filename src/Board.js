@@ -79,11 +79,38 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      //for the given row
+      //iterate over the row and check if the row contains more than one piece
+      //if it contains more than one piece, then return true
+      //otherwise, return false
+      var currentRow = this.get(rowIndex);
+      var pieceCount = 0;
+      for (var i = 0; i < currentRow.length; i += 1) {
+        if (currentRow[i] === 1) {
+          pieceCount += 1;
+          console.log("I found a piece!");
+        }
+      }
+
+      if (pieceCount > 1) {
+        return true;
+      } else{
+        return false;
+      }
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
+      var rowNum = this.get(0).length;
+
+      //for every row on the board, check if hasRowConflictAt returns true
+      //if hasRowConflictAt returns true, return true
+      for (var i = 0; i < rowNum; i += 1) {
+        if (this.hasRowConflictAt(i)){
+          return true;
+        }
+      }  
+    //else return false
       return false; // fixme
     },
 
