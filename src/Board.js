@@ -153,9 +153,9 @@
       if (majorDiagonalColumnIndexAtFirstRow > 0) {
         var count = 0;
         var diagonalLength = row.length - majorDiagonalColumnIndexAtFirstRow; 
-        for (var i = 0; i < diagonalLength; i ++){
+        for (var i = 0; i < diagonalLength; i ++) {
           var currentRow = this.get(i);
-          if (currentRow[majorDiagonalColumnIndexAtFirstRow + i] === 1){
+          if (currentRow[majorDiagonalColumnIndexAtFirstRow + i] === 1) {
             count += 1;
           }
         } 
@@ -168,9 +168,9 @@
           var count = 0;
           var horizontalShift = 0;
           var diagonalLength = row.length - j;
-          for(var k = 0; k < diagonalLength; k ++) {
+          for (var k = 0; k < diagonalLength; k ++) {
             var currentRow = this.get(j + k);
-            if(currentRow[horizontalShift] === 1){
+            if (currentRow[horizontalShift] === 1) {
               count += 1;
             }
             horizontalShift += 1;
