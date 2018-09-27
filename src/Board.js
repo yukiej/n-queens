@@ -62,7 +62,7 @@
     },
 
 
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -112,13 +112,34 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+    // input is a number, output is a Boolean
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var result = false;
+      var count = 0; 
+      var row = this.get(0);
+      for (var i = 0; i < row.length; i++) {
+        var currentRow = this.get(i);
+        if (currentRow[colIndex] === 1) {
+          count += 1;
+        }
+      }
+      if (count > 1) {
+        result = true;
+      }
+      return result;
     },
 
     // test if any columns on this board contain conflicts
+    // no inputs, output is a boolean
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var result = false;
+      var row = this.get(0);
+      for (var i = 0; i < row.length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return result;
     },
 
 
@@ -128,12 +149,50 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var row = this.get(0);
+      if (majorDiagonalColumnIndexAtFirstRow > 0) {
+        var count = 0;
+        var diagonalLength = row.length - majorDiagonalColumnIndexAtFirstRow; 
+        for (var i = 0; i < diagonalLength; i ++){
+          var currentRow = this.get(i);
+          if (currentRow[majorDiagonalColumnIndexAtFirstRow + i] === 1){
+            count += 1;
+          }
+        } 
+        if (count > 1) {
+          return true;
+        }
+      }
+      if (majorDiagonalColumnIndexAtFirstRow === 0) {
+        for (var j = 0; j < row.length; j ++) {
+          var count = 0;
+          var horizontalShift = 0;
+          var diagonalLength = row.length - j;
+          for(var k = 0; k < diagonalLength; k ++) {
+            var currentRow = this.get(j + k);
+            if(currentRow[horizontalShift] === 1){
+              count += 1;
+            }
+            horizontalShift += 1;
+          }
+          if (count > 1) {
+            return true;
+          }
+        }
+      }
+      
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var row = this.get(0);
+      for (var i = 0; i < row.length; i ++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
