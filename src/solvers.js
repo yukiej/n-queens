@@ -16,6 +16,7 @@
 
 
 window.findNRooksSolution = function(n) {
+  //Helper function takes in a board with 0 to n - 1 pieces, and returns an array of Board objects with 1 more piece than the input board with no duplicates
   var findNRooksSolutionHelper = function(numPieces, n, board) {
     //if we are starting an empty board, generate all boards with one piece
     var solutions = [];
@@ -29,6 +30,7 @@ window.findNRooksSolution = function(n) {
       }
     } else {
     //if we are starting with a non-empty board, find the last occupied spot
+    //TO DO: Refactor this into helper function OR find a way to add occupied places and num pieces on a board to the board properties
       var count = 0;
       var boardArray = board.rows();
       while (count < numPieces) {
@@ -57,17 +59,18 @@ window.findNRooksSolution = function(n) {
       if (numPieces > 0 && startingRow < n && startingCol < n) {
         for (let row = startingRow; row < n; row ++) {
           for (let col = 0; col < n; col ++) {
-            let currentBoard = boardArray.map(function(arr) {
-              return arr.slice();                    
-            });
-            currentBoard = new Board(currentBoard);
-            
-            currentBoard.togglePiece(row, col);
-            if (!(row === startingRow && col < startingCol)) {
-              solutions.push(currentBoard);
-            }
-          }  
-        }
+            if (!(row === startingRow && col < startingCol) && col !== lastCol) {
+              let currentBoard = boardArray.map(function(arr) {
+                return arr.slice();                    
+              });
+              currentBoard = new Board(currentBoard);
+              currentBoard.togglePiece(row, col);
+              if (!(currentBoard.hasAnyRowConflicts()) && !(currentBoard.hasAnyColConflicts())) {
+                solutions.push(currentBoard);
+              }
+            }    
+          }
+        }  
       }
     }
     //Starting at last occupied spot, generate all children that have one more and push to solutions
@@ -76,32 +79,25 @@ window.findNRooksSolution = function(n) {
   var intermediates = findNRooksSolutionHelper(0, n);
   var numPieces = 1;
   //loop over numPieces from 1 to n
-  //if numPieces is n, we're done! Check validity of contents of intermediates and return first one
+  //if numPieces is n, we're done! Return first board in intermediates
   //if numPieces is less than n: 
   //run findNRooksSolutionHelper(numPieces, n, board) on all the boards in intermediates
   //push each result into a NEW intermediates array
   //increment numPieces and repeat
   for (var pieces = 0; pieces < n; pieces++) {
-    //console.log(intermediates);
     if (numPieces === n) {
-      for (var i = 0; i < intermediates.length; i ++) {
-        if (!(intermediates[i].hasAnyRowConflicts()) && !(intermediates[i].hasAnyColConflicts())) {
-          return intermediates[i].rows();
-        }
-        //Check validity of contents of intermediates and return first one
-      }
+      return intermediates[0].rows();
     } else {
       var storeBoards = [];
       for (var j = 0; j < intermediates.length; j++) {
-        var currentBoards = findNRooksSolutionHelper(numPieces, n, intermediates[j]);
-        storeBoards = storeBoards.concat(currentBoards);
+        var parentBoard = intermediates[j];
+        var childBoards = findNRooksSolutionHelper(numPieces, n, parentBoard);
+        storeBoards = storeBoards.concat(childBoards);
       }
       intermediates = storeBoards;
       numPieces += 1;
     }
   }
-
-  //console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solutions));
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
@@ -201,7 +197,7 @@ window.findNQueensSolution = function(n, wantArray) {
       if (wantArray) {
         return correctSolutions.length;
       } 
-      var result = new Board({n : n});
+      var result = new Board({n: n});
       return result.rows();
     } else {
       var storeBoards = [];
